@@ -76,11 +76,11 @@ pcluster list-official-images --region <REGION>
 ```
 
 예시 출력:
-ImageName          Os           Arch
------------------  -----------  -----
-aws-parallelcluster-alinux2     alinux2   x86_64
-aws-parallelcluster-ubuntu2204  ubuntu2204 x86_64
-aws-parallelcluster-alinux2023  alinux2023 x86_64
+| ImageName                         | Os         | Arch   |
+|----------------------------------|------------|--------|
+| aws-parallelcluster-alinux2      | alinux2    | x86_64 |
+| aws-parallelcluster-ubuntu2204   | ubuntu2204 | x86_64 |
+| aws-parallelcluster-alinux2023   | alinux2023 | x86_64 |
 
 설명:
 - ImageName: ParallelCluster에서 사용할 수 있는 이미지 이름
