@@ -24,6 +24,18 @@ headnode-init-example.sh
 - mount 확인
 - 로그 기록
 
+
+HeadNode bootstrap script
+- Enable Enroot runtime
+- Configure Pyxis SPANK plugin
+- Apply Slurm plugstack configuration
+
+ComputeNode start script
+- Prepare Enroot runtime directories
+- Configure Pyxis runtime environment
+- Handle Ubuntu 24.04 AppArmor restriction
+
+
 ```bash
 computenode-start-example.sh
 ```

@@ -1,22 +1,47 @@
 #!/bin/bash
-set -euo pipefail
+set -e
 
-LOG_FILE="/var/log/headnode-init-example.log"
+echo "Executing $0"
 
-echo "[INFO] $(date '+%F %T') headnode init start" | tee -a "${LOG_FILE}"
-echo "[INFO] hostname: $(hostname)" | tee -a "${LOG_FILE}"
+# -------------------------------------------------------
+# HeadNode bootstrap example
+# Purpose:
+#  - Enable Enroot runtime
+#  - Configure Pyxis for Slurm container workloads
+#  - Apply Slurm plugstack configuration
+# -------------------------------------------------------
 
-mkdir -p /shared/admin/scripts
-mkdir -p /shared/admin/logs
+# Configure Enroot runtime directories
+ENROOT_PERSISTENT_DIR="/var/enroot"
+ENROOT_VOLATILE_DIR="/run/enroot"
 
-cat >/etc/profile.d/cluster-env.sh <<'EOF'
-export CLUSTER_ENV=example
-export SHARED_FS=/fsx
-EOF
+sudo mkdir -p $ENROOT_PERSISTENT_DIR
+sudo chmod 1777 $ENROOT_PERSISTENT_DIR
+sudo mkdir -p $ENROOT_VOLATILE_DIR
+sudo chmod 1777 $ENROOT_VOLATILE_DIR
 
-chmod +x /etc/profile.d/cluster-env.sh
+# Apply example Enroot configuration
+# Source path is provided by ParallelCluster examples
+sudo cp -a /opt/parallelcluster/examples/enroot/enroot.conf /etc/enroot/enroot.conf
+sudo chmod 0644 /etc/enroot/enroot.conf
 
-echo "[INFO] checking /fsx mount" | tee -a "${LOG_FILE}"
-mount | grep /fsx | tee -a "${LOG_FILE}" || true
 
-echo "[INFO] headnode init complete" | tee -a "${LOG_FILE}"
+# Configure Pyxis runtime directory
+PYXIS_RUNTIME_DIR="/run/pyxis"
+
+sudo mkdir -p $PYXIS_RUNTIME_DIR
+sudo chmod 1777 $PYXIS_RUNTIME_DIR
+
+
+# Configure Slurm plugstack for Pyxis
+sudo mkdir -p /opt/slurm/etc/plugstack.conf.d/
+
+sudo mv /opt/parallelcluster/examples/spank/plugstack.conf /opt/slurm/etc/
+sudo mv /opt/parallelcluster/examples/pyxis/pyxis.conf /opt/slurm/etc/plugstack.conf.d/
+
+# Reload Slurm configuration
+sudo -i scontrol reconfigure
+
+
+# Optional Lustre tuning (disabled example)
+# systemctl start lustre-tuning.service
