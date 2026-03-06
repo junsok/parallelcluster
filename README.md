@@ -1,6 +1,33 @@
 # AWS ParallelCluster HPC Guide
 
-이 저장소는 AWS ParallelCluster 운영 경험을 바탕으로 정리한 문서, 설정 예제, 운영 스크립트를 관리하기 위한 repository 입니다.
+## What I Built
+
+This repository documents how I designed and operated AWS ParallelCluster environments for HPC and AI workloads.
+
+Key areas covered:
+
+- Static GPU Cluster architecture for AI research workloads
+- Dynamic HPC Cluster architecture with automatic scaling
+- Slurm scheduler configuration and operational commands
+- FSx for Lustre integration for shared high-performance storage
+- Cluster bootstrap automation using CustomActions scripts
+- ParallelCluster operational runbooks and troubleshooting guides
+
+## Real Project Context
+
+The examples in this repository are based on real environments I worked on:
+
+### GPU AI Research Cluster
+- Static GPU compute nodes
+- Capacity Reservation based architecture
+- LoginNode + HeadNode separation
+- Container workloads using Pyxis + Enroot
+
+### HPC PoC Cluster
+- Dynamic compute nodes
+- MinCount=0 autoscaling architecture
+- EFA enabled networking
+- Slurm-based HPC workloads
 
 ## 범위
 - Static GPU Cluster 운영 예제
@@ -28,3 +55,16 @@
 docs/      # 운영 문서
 configs/   # cluster config / slurm settings example
 scripts/   # 운영 및 점검용 example script
+
+## Skills Demonstrated
+
+This repository demonstrates experience with:
+
+- AWS ParallelCluster
+- HPC infrastructure design
+- Slurm scheduler operations
+- FSx for Lustre
+- EFA networking
+- Cluster bootstrap automation
+- Linux system administration
+- Infrastructure documentation
