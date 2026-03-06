@@ -1,0 +1,91 @@
+Imds:
+  ImdsSupport: v2.0
+
+Image:
+  Os: alinux2023
+  CustomAmi: ami-xxxxxxxxxxxxxxxxx
+
+HeadNode:
+  InstanceType: <HEADNODE_INSTANCE_TYPE>
+  Ssh:
+    KeyName: <SSH_KEY_NAME>
+  Networking:
+    SubnetId: <PUBLIC_SUBNET_ID>
+    AdditionalSecurityGroups:
+      - <SECURITY_GROUP_ID>
+    ElasticIp: <ELASTIC_IP_OR_PLACEHOLDER>
+  LocalStorage:
+    RootVolume:
+      Size: {num}
+      Iops: {num}
+      Throughput: {num}
+      DeleteOnTermination: true
+  Iam:
+    AdditionalIamPolicies:
+      - Policy: arn:aws:iam::aws:policy/AdministratorAccess
+  CustomActions:
+    OnNodeConfigured:
+      Script: s3://<S3_BUCKET>/script/headnode-init-example.sh
+
+Scheduling:
+  Scheduler: slurm
+  SlurmSettings:
+    ScaledownIdletime: 60
+    QueueUpdateStrategy: DRAIN
+    EnableMemoryBasedScheduling: true
+    CustomSlurmSettingsIncludeFile: s3://<S3_BUCKET>/script/slurm-settings-dynamic-example.conf
+
+  SlurmQueues:
+    - Name: compute
+      CapacityType: ONDEMAND
+      Networking:
+        SubnetIds:
+          - <PRIVATE_SUBNET_ID>
+        PlacementGroup:
+          Enabled: false
+        AdditionalSecurityGroups:
+          - <SECURITY_GROUP_ID>
+      Iam:
+        AdditionalIamPolicies:
+          - Policy: arn:aws:iam::aws:policy/AdministratorAccess
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+          RootVolume:
+            Size: {num}
+      JobExclusiveAllocation: false
+      ComputeResources:
+        - Name: hpc-dynamic
+          InstanceType: <HPC_INSTANCE_TYPE>
+          MinCount: 0
+          MaxCount: <MAX_DYNAMIC_NODE_COUNT>
+          Efa:
+            Enabled: true
+      CustomActions:
+        OnNodeStart:
+          Script: s3://<S3_BUCKET>/script/computenode-start-example.sh
+
+DevSettings:
+  Timeouts:
+    HeadNodeBootstrapTimeout: 3600
+
+SharedStorage:
+  - MountDir: /fsx
+    Name: fsx
+    StorageType: FsxLustre
+    FsxLustreSettings:
+      FileSystemId: <FSX_FILE_SYSTEM_ID>
+
+Monitoring:
+  DetailedMonitoring: true
+  Logs:
+    CloudWatch:
+      Enabled: true
+  Dashboards:
+    CloudWatch:
+      Enabled: true
+
+Tags:
+  - Key: Environment
+    Value: example

@@ -1,0 +1,109 @@
+Imds:
+  ImdsSupport: v2.0
+
+Image:
+  Os: ubuntu2204
+  CustomAmi: ami-xxxxxxxxxxxxxxxxx
+
+LoginNodes:
+  Pools:
+    - Name: login-node
+      Count: <LOGIN_NODE_COUNT>
+      InstanceType: <LOGIN_INSTANCE_TYPE>
+      GracetimePeriod: 3
+      Networking:
+        SubnetIds:
+          - <PUBLIC_SUBNET_ID>
+        AdditionalSecurityGroups:
+          - <SECURITY_GROUP_ID>
+      Iam:
+        AdditionalIamPolicies:
+          - Policy: arn:aws:iam::aws:policy/AdministratorAccess
+
+HeadNode:
+  InstanceType: <HEADNODE_INSTANCE_TYPE>
+  Ssh:
+    KeyName: <SSH_KEY_NAME>
+  Networking:
+    SubnetId: <PUBLIC_SUBNET_ID>
+    AdditionalSecurityGroups:
+      - <SECURITY_GROUP_ID>
+    ElasticIp: <ELASTIC_IP_OR_PLACEHOLDER>
+  LocalStorage:
+    RootVolume:
+      Size: {num}
+      Iops: {num}
+      Throughput: {num}
+      DeleteOnTermination: true
+  Iam:
+    AdditionalIamPolicies:
+      - Policy: arn:aws:iam::aws:policy/AdministratorAccess
+  CustomActions:
+    OnNodeConfigured:
+      Script: s3://<S3_BUCKET>/script/headnode-init-example.sh
+
+Scheduling:
+  Scheduler: slurm
+  SlurmSettings:
+    ScaledownIdletime: 60
+    QueueUpdateStrategy: DRAIN
+    EnableMemoryBasedScheduling: true
+    CustomSlurmSettingsIncludeFile: s3://<S3_BUCKET>/script/slurm-settings-static-example.conf
+
+  SlurmQueues:
+    - Name: compute
+      CapacityReservationTarget:
+        CapacityReservationId: <CAPACITY_RESERVATION_ID>
+      Networking:
+        SubnetIds:
+          - <PRIVATE_SUBNET_ID>
+        PlacementGroup:
+          Enabled: false
+        AdditionalSecurityGroups:
+          - <SECURITY_GROUP_ID>
+      Iam:
+        AdditionalIamPolicies:
+          - Policy: arn:aws:iam::aws:policy/AdministratorAccess
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+          RootVolume:
+            Size: {num}
+      JobExclusiveAllocation: false
+      ComputeResources:
+        - Name: gpu-static
+          InstanceType: <GPU_INSTANCE_TYPE>
+          MinCount: <STATIC_NODE_COUNT>
+          MaxCount: <STATIC_NODE_COUNT>
+          Efa:
+            Enabled: false
+      CustomActions:
+        OnNodeStart:
+          Script: s3://<S3_BUCKET>/script/computenode-start-example.sh
+        OnNodeConfigured:
+          Script: s3://<S3_BUCKET>/script/computenode-configure-example.sh
+
+DevSettings:
+  Timeouts:
+    HeadNodeBootstrapTimeout: 3600
+
+SharedStorage:
+  - MountDir: /fsx
+    Name: fsx
+    StorageType: FsxLustre
+    FsxLustreSettings:
+      FileSystemId: <FSX_FILE_SYSTEM_ID>
+
+Monitoring:
+  DetailedMonitoring: true
+  Logs:
+    CloudWatch:
+      Enabled: true
+  Dashboards:
+    CloudWatch:
+      Enabled: true
+
+Tags:
+  - Key: Environment
+    Value: example
