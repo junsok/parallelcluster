@@ -1,4 +1,7 @@
+# ParallelCluster Architecture
 ## Static GPU Cluster (AWS GPU 사업)
+
+```
 User
  │
  │ SSH
@@ -14,15 +17,19 @@ Compute Nodes (Static GPU)
  │
  ▼
 FSx Lustre
+```
 
-특징
-• Static Node
-• Capacity Reservation
-• Login Node 존재
-• GPU 연구용 환경
+### 특징
+- Static Node
+- Capacity Reservation
+- Login Node 존재
+- GPU 연구용 환경
 
+---
 
 ## Dynamic HPC Cluster (IBS PoC)
+
+```
 User
  │
  │ SSH
@@ -39,9 +46,10 @@ EFA Network
  │
  ▼
 FSx Lustre
+```
 
-특징
-• Dynamic Node
-• Slurm Scale-out
-• EFA 사용
-• HPC 워크로드
+### 특징
+- Dynamic Node
+- Slurm Scale-out
+- EFA 사용
+- HPC 워크로드
