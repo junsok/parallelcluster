@@ -55,6 +55,7 @@ The examples in this repository are based on real environments I worked on:
 docs/      # 운영 문서
 configs/   # cluster config / slurm settings example
 scripts/   # 운영 및 점검용 example script
+```
 
 ## Skills Demonstrated
 
