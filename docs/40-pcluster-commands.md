@@ -52,9 +52,11 @@ pcluster delete-cluster --cluster-name <CLUSTER_NAME> --region <REGION>
 pcluster describe-image --image-id <IMAGE_ID> --region <REGION>
 ```
 
-# 7. 운영 시 자주 보는 목적
+## 7. 운영 시 자주 보는 목적
 
-describe-cluster: 현재 반영 상태 확인
-get-cluster-stack-events: 생성/업데이트 실패 원인 확인
-update-cluster --dryrun true: 변경 전 검증
-delete-cluster: 삭제 전 외부 연동 리소스 영향 확인
+| 명령어 | 목적 |
+|---|---|
+| `describe-cluster` | 현재 반영 상태 확인 |
+| `get-cluster-stack-events` | 생성/업데이트 실패 원인 확인 |
+| `update-cluster --dryrun true` | 변경 전 검증 |
+| `delete-cluster` | 삭제 전 외부 연동 리소스 영향 확인 |
