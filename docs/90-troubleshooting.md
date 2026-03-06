@@ -52,9 +52,12 @@ IDLE~
 POWERING_UP
 ```
 ## 4-1. FSx 상태 확인
-Path: scripts/examples/check-fsx-mount.sh
+파일경로
+scripts/examples/check-fsx-mount.sh
 
 ## 4-2. Scale 테스트 Job
-Path: scripts/examples/scale-test-job.sh
+파일경로
+scripts/examples/scale-test-job.sh
+
 
 
